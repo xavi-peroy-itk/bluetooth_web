@@ -7,21 +7,26 @@
 	<script>
 		let characteristic = null;
 		async function connect() {
-			const device = await navigator.bluetooth.requestDevice({
-				filters: [
-					{
-						services: ['fafafafa-fafa-fafa-fafa-fafafafafafa'],
-					},
-				],
-			});
-			const { gatt } = device;
-			await gatt.connect();
-			const service = await gatt.getPrimaryService(
-				'fafafafa-fafa-fafa-fafa-fafafafafafa'
-			);
-			characteristic = service.getCharacteristic(
-				'3c9a3f00-8ed3-4bdf-8a39-a01bebede295'
-			);
+			try {
+				const device = await navigator.bluetooth.requestDevice({
+					filters: [
+						{
+							services: ['fafafafa-fafa-fafa-fafa-fafafafafafa'],
+						},
+					],
+				});
+				const { gatt } = device;
+				await gatt.connect();
+				const service = await gatt.getPrimaryService(
+					'fafafafa-fafa-fafa-fafa-fafafafafafa'
+				);
+				characteristic = await service.getCharacteristic(
+					'3c9a3f00-8ed3-4bdf-8a39-a01bebede295'
+				);
+			} catch (e) {
+				alert(e);
+			}
+
 		}
 		async function run(state) {
 			/*setReaddValue(
@@ -36,10 +41,12 @@
 				  message,
 				]);
 			  }
-			);
-	  
-			await characteristic.startNotifications();*/
-			characteristic.writeValue(Uint8Array.of(state));
+			);*/
+			try {
+				await characteristic.writeValue(Uint8Array.of(state));
+			} catch (e) {
+				alert(e);
+			}
 		}
 	</script>
 
