@@ -5,7 +5,8 @@
 	<meta charset="UTF-8" />
 	<title>title</title>
 	<script>
-		async function run() {
+		let characteristic = null;
+		async function connect() {
 			const device = await navigator.bluetooth.requestDevice({
 				filters: [
 					{
@@ -18,9 +19,11 @@
 			const service = await gatt.getPrimaryService(
 				'fafafafa-fafa-fafa-fafa-fafafafafafa'
 			);
-			const characteristic = await service.getCharacteristic(
+			characteristic = service.getCharacteristic(
 				'3c9a3f00-8ed3-4bdf-8a39-a01bebede295'
 			);
+		}
+		async function run(state) {
 			/*setReaddValue(
 			  new TextDecoder().decode(await characteristic.readValue())
 			);
@@ -36,14 +39,16 @@
 			);
 	  
 			await characteristic.startNotifications();*/
-			characteristic.writeValue(Uint8Array.of(1));
+			characteristic.writeValue(Uint8Array.of(state));
 		}
 	</script>
 
 </head>
 
 <body>
-	<button onclick="run()">Click me</button>
+	<button onclick="connect()">Connect</button>
+	<button onclick="run(1)">Turn ON</button>
+	<button onclick="run(0)">Turn OFF</button>
 </body>
 
 </html>
